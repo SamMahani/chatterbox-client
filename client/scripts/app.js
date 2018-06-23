@@ -1,56 +1,29 @@
-// YOUR CODE HERE:
-// Server: http://parse.sfm8.hackreactor.com/
-// App ID: 72b8e073a4abde10221ce95f38ed1c63bd7f3d6b
-// API Key: cf1ce23a61e2a40702c347b7dc1e0af8c28f6c7a
 
-// $.ajaxSetup({
-//   url: "http://parse.sfm8.hackreactor.com/",
-//   global: false,
-//   type: "POST"
-// });
-
-var message = {
-  username: 'shawndrost',
-  text: 'trololo',
-  roomname: '4chan'
-};
-
-var local = new Date();
-var msg;
-//message constructor
-var Message = (username, text, roomname) => {
-  this.username = username;
-  this.text = text;
-  this.roomname = roomname;
-}
 
 class Apps {
   constructor(username, text, roomname) {
     this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages';
-    
+    this.msg;
   }
-
+  ////////////////////////////////////////////////////////////////////////////
   init() {
-    $(document).ready(function() {
-      // setInterval(app.fetch, 1000);
-      app.fetch();
-      setTimeout(
-      function loop() {
-
-        msg.results.forEach( (element) => app.renderMessage(element));
-
-      },500)
-
-    })
+    this.fetch();
+    $('#main').on('click', '.username', this.handleUsernameClick);
   }
-
+  ////////////////////////////////////////////////////////////////////////////
+  handleUsernameClick() {
+    console.log('you cliked me!');
+  }
+  ////////////////////////////////////////////////////////////////////////////
   clearMessages() {
     $('#chats').empty();
   }
-  
+  ////////////////////////////////////////////////////////////////////////////
   renderMessage(message) {
-
     message.username = message.username || 'anonymous';
+    message.username = JSON.stringify(message.username).slice(1,message.username.length -2);
+    message.text = JSON.stringify(message.text).slice(1,message.username.length -2);
+
     $('#chats').append(`
       <div class="chat">
         <span class="username">${message.username}</span><br>
@@ -58,11 +31,35 @@ class Apps {
       </div>
     `);
   }
+  ////////////////////////////////////////////////////////////////////////////
+  renderRoom(room) {
+    var input = `<option class="${room}">${room}</option>`;
+    $("#roomSelect").append(input);
+    
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  renderAllRooms() {
+    $("#roomSelect").append('<option value="" disable selected>chat room</option>');
+    var unique = Array.from(this.msg.results).map(el => el.roomname);
 
+    unique = [...new Set(unique)];
 
+    for (let i = 0; i < unique.length; i++) {
+      let input = `<option class="${unique[i]}">${unique[i]}</option>`;
+      $("#roomSelect").append(input);   
+    }
+
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  clearRooms() {
+    $("#roomSelect").empty();
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
   send(dat) {
+    var self = this;
     $.ajax({
-      url: this.server,
+      url: self.server,
       type: 'POST',
       data: JSON.stringify(dat),
       contentType: 'application/json',
@@ -76,57 +73,40 @@ class Apps {
       }
     });
   }
-
-
-
+  ////////////////////////////////////////////////////////////////////////////
   fetch() {
+    var self = this;
     $.ajax({
       url: this.server,
       type: 'GET',
       data: { 
-              order: '-createdAt', 
-              limit: 50 }, 
+        order: '-createdAt', 
+        limit: 10 }, 
       success: function(resp) {
-      
-      msg = resp;
-      console.log(resp);
-      
-
+        self.msg = resp;
+        console.log('sam', self.msg);
+        self.clearMessages();
+        self.msg.results.forEach((element) => {
+          self.renderMessage(element);
+        });
+        self.clearRooms();
+        self.renderAllRooms();
+        setTimeout(self.fetch.bind(self), 4000);
       },
       error: function() {
-
       }
     });
   }
 
-};
-
+}
 
 
 let app = new Apps();
-app.fetch();
-// //init method
-// app.init = () => {};
 
-// var p = '<p>Testing this</p>';
+$(document).ready(function() {
+  app.init();
+});
 
-// var dat = {
-//   username: 'shawndrost',
-//   text: 'trololo',
-//   roomname: '4chan'
-// };
-
-// //http://parse.sfm8.hackreactor.com/chatterbox/classes/messages
-// //'hrsf99-chatterbox-client/client/index.html'
-// //send method
-
-// // app.send = (dat) => {
-// //   $.post('//http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',   // url
-// //        JSON.stringify(dat), // data to be submit
-// //        function(data, status, jqXHR) {// success callback
-// //                 $('body').append(p);
-// //         });
-// // };
 
 
 
