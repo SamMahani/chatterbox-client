@@ -22,10 +22,21 @@
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/init.js"></script>
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
+        <div class="topBar">
+          <select class="select">
+            <option value="" disable selected>chat room</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+          </select>
+          <input type="text" class="inputbar"> </input>
+          <button class="select">Submit</button>
+        </div>
       <!-- Your HTML goes here! -->
     </div>
     <div id="chats"></div>

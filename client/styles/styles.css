@@ -88,3 +88,26 @@ form input[type=text] {
     background-color: #0090da;
 }
 
+.msg {
+    color: white;
+    background-color: black;
+}
+
+.topBar {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 0 auto;
+}
+
+.inputbar {
+  height: 1.5em;
+  width: 26em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.select {
+  
+}
+
