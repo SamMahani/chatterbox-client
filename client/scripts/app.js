@@ -9,10 +9,15 @@ class Apps {
   init() {
     this.fetch();
     $('#main').on('click', '.username', this.handleUsernameClick);
+    $('#send .submit').on('submit', this.handleSubmit);
   }
   ////////////////////////////////////////////////////////////////////////////
   handleUsernameClick() {
     console.log('you cliked me!');
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  handleSubmit() {
+    console.log('you submit something!');
   }
   ////////////////////////////////////////////////////////////////////////////
   clearMessages() {
@@ -21,6 +26,9 @@ class Apps {
   ////////////////////////////////////////////////////////////////////////////
   renderMessage(message) {
     message.username = message.username || 'anonymous';
+    message.text = message.username || 'random text';
+    message.username.replace(/</, ' ');
+    message.text.replace(/</, ' ');
     message.username = JSON.stringify(message.username).slice(1,message.username.length -2);
     message.text = JSON.stringify(message.text).slice(1,message.username.length -2);
 
@@ -54,7 +62,6 @@ class Apps {
   clearRooms() {
     $("#roomSelect").empty();
   }
-
   ////////////////////////////////////////////////////////////////////////////
   send(dat) {
     var self = this;
@@ -81,7 +88,7 @@ class Apps {
       type: 'GET',
       data: { 
         order: '-createdAt', 
-        limit: 10 }, 
+        limit: 3000 }, 
       success: function(resp) {
         self.msg = resp;
         console.log('sam', self.msg);
@@ -91,7 +98,7 @@ class Apps {
         });
         self.clearRooms();
         self.renderAllRooms();
-        setTimeout(self.fetch.bind(self), 4000);
+        setTimeout(self.fetch.bind(self), 8000);
       },
       error: function() {
       }

@@ -93,7 +93,7 @@ form input[type=text] {
     background-color: black;
 }
 
-.topBar {
+#send {
   display: flex;
   justify-content: center;
   flex-direction: column;
